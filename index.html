@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng 20/10 - Món Quà Kỳ Diệu 3D Supreme</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,600;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="webgl3dCanvas"></div>
+
+    <div id="fallingPetalsContainer"></div>
+    <div id="meteorRainContainer"></div>
+    <div id="firefliesContainer"></div>
+
+    <div id="countdownOverlay" class="countdown-overlay">
+        <div id="countdownNumber" class="countdown-number">3</div>
+    </div>
+
+    <div id="shootingStar" class="shooting-star"></div>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="nhac.mp3" type="audio/mp3">
+    </audio>
+
+    <button class="sound-toggle-btn glow-star-border" id="soundToggleBtn">
+        <i class="fa-solid fa-music" id="soundIcon"></i>
+        <span class="sound-tooltip">Bật nhạc nền 🎵</span>
+    </button>
+
+    <div class="shockwave" id="shockwave"></div>
+
+    <div class="app-3d-wrapper">
+        <!-- MÀN 0: NHÂN VẬT CHẠY VÀ NHẶT QUÀ -->
+        <div class="stage stage-intro active" id="stageIntro">
+            <div class="magic-envelope-card tilt-card glow-star-border">
+                <span class="neon-badge">✦ SPECIAL 20/10 JOURNEY ✦</span>
+                <h1 class="glow-h1" style="font-size: 24px; margin-top: 8px;">Có Một Món Quà...</h1>
+                
+                <div class="pickup-story-stage" id="pickupStoryStage">
+                    <div class="runner-person" id="runnerPerson">
+                        <span class="person-avatar">🏃‍♀️</span>
+                    </div>
+                    <div class="ground-gift" id="groundGift">
+                        <span class="gift-emoji">🎁</span>
+                        <div class="gift-glow-aura"></div>
+                    </div>
+                    <div id="footprintsContainer"></div>
+                </div>
+
+                <p class="subtitle" id="introSubtitle" style="margin-bottom: 20px;">
+                    Đang tìm kiếm món quà từ Ngân Hà...
+                </p>
+
+                <div class="intro-action-box" id="introActionBox">
+                    <button class="interactive-btn glow-pulse-btn glow-star-border" id="pickGiftBtn" style="width: 100%; padding: 14px; font-size: 14px;">
+                        <i class="fa-solid fa-gift"></i> 🎁 Mở Quà Bất Ngờ ✨
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÀN THIỆP CHÍNH -->
+        <div class="stage stage-bloom" id="stageBloom">
+            <div class="top-bar">
+                <button class="reset-btn glow-star-border" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Xem lại</button>
+                <span class="stage-tag">✦ Gửi Đến các chị em ✦</span>
+            </div>
+
+            <div class="open-book-card tilt-card glow-star-border" id="tiltCard">
+                <div class="bloom-rose-graphic">
+                    <span class="center-rose">🌹</span>
+                </div>
+
+                <h2 class="card-title">Chúc Mừng 20/10!</h2>
+                <div class="card-divider">✨ 💖 ✨</div>
+                <p class="wishing-content">
+                    "Chúc các chị em  một ngày 20/10 ngập tràn nụ cười, xinh đẹp rực rỡ như những đóa hoa, luôn tự tin, bình an và gặt hái được mọi ước mơ ngọt ngào nhất!"
+                </p>
+                <div class="card-footer">
+                    <span class="sign-text"> Trân trọng gửi đến các chị em ❤️</span>
+                </div>
+            </div>
+
+            <div class="control-grid-box">
+                <button class="interactive-btn alt-btn glow-star-border" id="videoBtn">
+                    <i class="fa-solid fa-film"></i> Video 🎬
+                </button>
+                <button class="interactive-btn glow-star-border" id="photoAlbumBtn">
+                    <i class="fa-solid fa-images"></i> Album 📷
+                </button>
+                <button class="interactive-btn alt-btn-star glow-star-border" id="catchStarBtn">
+                    <i class="fa-solid fa-star"></i> Hái Sao ⭐
+                </button>
+                <button class="interactive-btn alt-btn-2 glow-star-border" id="fortuneBtn">
+                    <i class="fa-solid fa-crystal-ball"></i> Quẻ Bói 🔮
+                </button>
+                <button class="interactive-btn alt-btn-3 glow-star-border" id="flowerGardenBtn">
+                    <i class="fa-solid fa-seedling"></i> Hái Hoa 🌸
+                </button>
+                <button class="interactive-btn alt-btn-4 glow-star-border" id="changeQuoteBtn">
+                    <i class="fa-solid fa-envelope-open-text"></i> Thư ❤️
+                </button>
+            </div>
+        </div>
+
+        <!-- MÀN LỜI CHÚC SAU KHI GỬI ƯỚC NGUYỆN -->
+        <div class="stage stage-wish-success" id="stageWishSuccess">
+            <div class="top-bar">
+                <button class="reset-btn glow-star-border" id="backToMainFromWish"><i class="fa-solid fa-arrow-left"></i> Quay lại thiệp</button>
+                <span class="stage-tag">✦ Nguyện Ước Đã Gửi ✦</span>
+            </div>
+
+            <div class="open-book-card tilt-card glow-star-border" style="margin-top: 15px;">
+                <div class="star-realm-icon" style="font-size: 55px; margin-bottom: 5px;">🌠</div>
+                <h2 class="card-title" style="font-size: 28px;">Điều Ước Của Bạn</h2>
+                <div class="card-divider">✨ 🌟 ✨</div>
+                
+                <div class="wish-display-box-page glow-star-border" id="pageWishDisplayText">
+                    "Nội dung điều ước sẽ hiện ở đây..."
+                </div>
+
+                <p class="wishing-content" style="font-size: 13px; min-height: auto; margin-bottom: 15px;">
+                    "Nguyện ước của bạn đã vút bay theo ngôi sao băng qua Dải Ngân Hà. Chúc cho những dự định và mong ước tốt đẹp nhất sẽ sớm trở thành hiện thực rực rỡ! ❤️"
+                </p>
+                
+                <div class="card-footer">
+                    <span class="sign-text">Vũ Trụ Lời Chúc 20/10 ✨</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: 5 TINH CẦU VŨ TRỤ -->
+    <div class="custom-modal" id="galaxyModal">
+        <div id="galaxyStarsContainer" class="modal-effect-bg"></div>
+        <div class="modal-glass-content tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closeGalaxyModal"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="galaxy-view active" id="galaxyMainView">
+                <h2 class="modal-title">✨ Vũ Trụ Lời Chúc ✨</h2>
+                <p class="modal-sub">Chạm vào từng tinh cầu tỏa sáng để bước vào thế giới riêng biệt!</p>
+
+                <div class="planet-interactive-grid">
+                    <div class="planet-item planet-rose glow-star-border" data-index="0">
+                        <div class="planet-ring"></div>
+                        <div class="planet-core">🌹</div>
+                    </div>
+                    <div class="planet-item planet-heart glow-star-border" data-index="1">
+                        <div class="planet-ring"></div>
+                        <div class="planet-core">💖</div>
+                    </div>
+                    <div class="planet-item planet-diamond glow-star-border" data-index="2">
+                        <div class="planet-ring"></div>
+                        <div class="planet-core">💎</div>
+                    </div>
+                    <div class="planet-item planet-moon glow-star-border" data-index="3">
+                        <div class="planet-ring"></div>
+                        <div class="planet-core">🌙</div>
+                    </div>
+                    <div class="planet-item planet-star glow-star-border" data-index="4">
+                        <div class="planet-ring"></div>
+                        <div class="planet-core">⭐</div>
+                    </div>
+                </div>
+                <div class="star-hint-text">Mỗi quả cầu vũ trụ chứa đựng một phép màu diệu kỳ...</div>
+            </div>
+
+            <div class="galaxy-view" id="starDetailView">
+                <div class="star-realm-icon" id="realmIcon">🌹</div>
+                <h2 class="modal-title" id="realmTitle">Vương Quốc Hạnh Phúc</h2>
+                <div class="card-divider">✨ 🌟 ✨</div>
+                <p class="realm-message glow-star-border" id="realmMessage">Nội dung lời chúc...</p>
+                <button class="back-to-stars-btn glow-star-border" id="backToStarsBtn">
+                    <i class="fa-solid fa-arrow-left"></i> Trở về Vũ Trụ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: VIDEO CAPCUT -->
+    <div class="custom-modal" id="videoModal">
+        <div id="videoStarsContainer" class="modal-effect-bg"></div>
+
+        <div class="modal-glass-content photo-modal-bg tilt-card glow-star-border" style="max-width: 360px;">
+            <button class="close-modal-btn glow-star-border" id="closeVideoModal"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title">🎬 Video Kỷ Niệm 🎬</h2>
+            <p class="modal-sub">Những thước phim ngọt ngào nhất</p>
+
+            <div class="video-container-9-16 glow-star-border">
+                <video id="capcutVideoPlayer" controls playsinline webkit-playsinline preload="auto">
+                    <source src="video.mp4" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ phát video.
+                </video>
+            </div>
+
+            <button class="back-home-btn glow-star-border" id="backToGalaxyFromVideoBtn" style="margin-top: 12px; width: 100%; background: linear-gradient(135deg, #8e24aa, #4a148c); border-color: #e040fb;">
+                <i class="fa-solid fa-planet"></i> 🌌 Khám Phá Vũ Trụ Lời Chúc ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL MINIGAME: HÁI SAO GỬI LỜI YÊU -->
+    <div class="custom-modal" id="catchStarModal">
+        <div id="starGameArea" class="modal-effect-bg"></div>
+        <div class="modal-glass-content tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closeCatchStarModal"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title">⭐ Hái Sao Gửi Lời Yêu ⭐</h2>
+            <p class="modal-sub">Chạm nhanh vào các ngôi sao rơi để hái đủ 5 sao bí mật!</p>
+
+            <div class="star-score-board glow-star-border">
+                <span>Giỏ sao: <strong id="starScoreText">0</strong> / 5 ⭐</span>
+            </div>
+
+            <div class="secret-star-msg glow-star-border" id="secretStarMsg">
+                Hãy bấm bắt đầu để hái những ngôi sao lấp lánh đang rơi...
+            </div>
+
+            <button class="back-home-btn glow-star-border" id="startStarGameBtn" style="width: 100%; margin-top: 10px;">
+                ✨ Bắt Đầu Hái Sao ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ALBUM ẢNH KỶ NIỆM -->
+    <div class="custom-modal" id="photoModal">
+        <div id="photoStarsContainer" class="modal-effect-bg"></div>
+
+        <div class="modal-glass-content photo-modal-bg tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closePhotoModal"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title">📷 Album Kỷ Niệm 📷</h2>
+            <p class="modal-sub">Những khoảnh khắc xinh đẹp rực rỡ</p>
+
+            <div class="photo-slider-wrapper">
+                <button class="slider-btn prev-btn glow-star-border" id="prevPhotoBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                
+                <div class="photo-frame-3d glow-star-border">
+                    <img id="sliderImage" src="anh1.jpg" alt="Ảnh kỷ niệm">
+                    <div class="photo-caption" id="photoCaption">Đóa hoa rực rỡ nhất 🌸</div>
+                </div>
+
+                <button class="slider-btn next-btn glow-star-border" id="nextPhotoBtn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: BÓI QUẺ HẮC ÁM -->
+    <div class="custom-modal" id="fortuneModal">
+        <div id="magicDustContainer" class="modal-effect-bg"></div>
+
+        <div class="modal-glass-content tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closeFortuneModal"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title">🔮 Bói Que Nhân Phẩm 🔮</h2>
+            <p class="modal-sub">chạm vào quả cầu để nhận quẻ bói định mệnh!</p>
+
+            <div class="crystal-ball-box glow-star-border" id="crystalBall" style="border-radius: 50%; display: inline-block;">
+                <div class="crystal-glow" id="crystalGlowIcon">🔮</div>
+            </div>
+
+            <div class="fortune-result-text glow-star-border" id="fortuneResultText">
+                "Hãy chạm vào quả cầu để nhận quẻ bói định mệnh ..."
+            </div>
+
+            <div class="modal-action-buttons">
+                <button class="back-to-stars-btn glow-star-border" id="spinFortuneBtn">
+                    ✨ Thỉnhquẻ bói định mệnh ✨
+                </button>
+                <button class="back-home-btn glow-star-border" id="backHomeFromFortuneBtn">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: HÁI HOA NHẬN MẬT THƯ -->
+    <div class="custom-modal" id="gardenModal">
+        <div id="gardenPetalsContainer" class="modal-effect-bg"></div>
+
+        <div class="modal-glass-content tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closeGardenModal"><i class="fa-solid fa-xmark"></i></button>
+            <h2 class="modal-title">🌸 Khu Vườn Bức Thư Mật 🌸</h2>
+            <p class="modal-sub">Hái một đóa hoa bạn yêu thích nhất để mở lời nhắn bí mật!</p>
+
+            <div class="flower-garden-grid">
+                <div class="flower-card-item glow-star-border" data-flower="0">🌹<br><span>Hoa Hồng</span></div>
+                <div class="flower-card-item glow-star-border" data-flower="1">🌻<br><span>Hướng Dương</span></div>
+                <div class="flower-card-item glow-star-border" data-flower="2">🌷<br><span>Hoa Tulip</span></div>
+                <div class="flower-card-item glow-star-border" data-flower="3">💐<br><span>Cẩm Tú Cầu</span></div>
+            </div>
+
+            <div class="flower-secret-msg glow-star-border" id="flowerSecretMsg">
+                Hãy chọn một đóa hoa xinh đẹp...
+            </div>
+
+            <button class="back-home-btn glow-star-border" id="backHomeFromGardenBtn" style="margin-top: 12px; width: 100%;">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại thiệp chính
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 6: BỨC THƯ & VIẾT ƯỚC NGUYỆN -->
+    <div class="custom-modal" id="letterModal">
+        <div id="letterStarsContainer" class="modal-effect-bg"></div>
+        <div class="modal-glass-content letter-bg tilt-card glow-star-border">
+            <button class="close-modal-btn glow-star-border" id="closeLetterModal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="letter-header">
+                <span class="letter-badge">20/10 • SPECIAL LETTER</span>
+                <h2 class="letter-title">Gửi Các Chị Em</h2>
+            </div>
+            
+            <div class="letter-body glow-star-border">
+                <p>Nhân ngày Phụ nữ Việt Nam 20/10, xin gửi đến các chị em những tình cảm trân trọng và ngọt ngào nhất.</p>
+                <p>Cảm ơn sự xuất hiện của các chị em đã làm cho thế giới xung quanh trở nên dịu dàng, ấm áp và đong đầy sắc màu hơn. Chúc các chị em luôn giữ vững nụ cười rạng rỡ, một trái tim tràn ngập niềm vui và một đời bình an, hạnh phúc!</p>
+            </div>
+
+            <div class="wish-input-box">
+                <input type="text" id="userWishInput" class="glow-star-border" placeholder="Gửi điều ước của bạn lên bầu trời..." autocomplete="off">
+                <button id="sendWishBtn" class="glow-star-border"><i class="fa-solid fa-paper-plane"></i> Gửi Ước Nguyện</button>
+            </div>
+
+            <div class="letter-footer">
+                <span>Thân tặng với tất cả sự trân quý ❤️</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
